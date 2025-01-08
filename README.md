@@ -50,7 +50,7 @@ python word_hunt.py
 
 Here’s a quick preview of the interface when it is used. 
 
-<img src="example_usage.png" alt="Example Screenshot" width="400"/>
+<img src="usage_example.png" alt="Example Screenshot" width="400"/>
 
 
 ## Logic Breakdown and Code Pipeline
