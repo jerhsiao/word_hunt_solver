@@ -5,6 +5,8 @@
 **A fast and intuitive solver for a 4×4 Word Hunt game by Jeremy Hsiao.**  
 It quickly finds all valid English words that can be formed by connecting letters (horizontally, vertically, or diagonally) on a 4×4 grid. It also highlights each found word’s path within the grid and optionally draws lines with arrows between the letters. Utilizes DFS. 
 
+Disclaimer: Uses existing word dictionary. Not the same dictionary that Word Hunt by GamePigeon utilizes, so some words may not be valid. 
+
 ---
 
 ## Features
