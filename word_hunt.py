@@ -119,6 +119,9 @@ class WordHuntApp:
 
         self.current_highlight = []
         self.path_lines = []
+        self.entry_centers = {}
+
+        self.default_bg = {}
 
         main_frame = ttk.Frame(self.window, padding=10)
         main_frame.pack(fill=tk.BOTH, expand=True)
@@ -141,6 +144,8 @@ class WordHuntApp:
                     self.grid_frame, width=3, font=('Arial', 20), justify='center'
                 )
                 e.grid(row=r, column=c, padx=5, pady=5)
+
+                self.default_bg[e] = e.cget("bg")
                 e.bind("<KeyRelease>", lambda evt, rr=r, cc=c: self.on_key_release(evt, rr, cc))
                 row_entries.append(e)
             self.entries.append(row_entries)
@@ -161,7 +166,6 @@ class WordHuntApp:
         self.results_text.tag_configure("word", underline=True)
         self.results_text.tag_bind("word", "<Button-1>", self.word_clicked)
 
-        self.entry_centers = {}
         self.window.after(100, self.capture_entry_centers)
 
     def capture_entry_centers(self):
@@ -187,7 +191,7 @@ class WordHuntApp:
 
     def clear_highlights(self):
         for e in self.current_highlight:
-            e.config(bg="#90EE90")
+            e.config(bg=self.default_bg[e])
         self.current_highlight.clear()
 
         for line_id in self.path_lines:
@@ -209,22 +213,40 @@ class WordHuntApp:
             return
 
         path = info.path
-        # Highlight squares
-        for (r, c) in path:
-            self.entries[r][c].config(bg="#90EE90")
-            self.current_highlight.append(self.entries[r][c])
+        path_len = len(path)
+        if path_len == 0:
+            return
 
-        # Draw arrow lines from square to square
-        for i in range(len(path) - 1):
+        # Start: dark green (#006400), End: a reasonably lighter green (#60c060)
+        start_rgb = (0x00, 0x64, 0x00)  # #006400
+        end_rgb   = (0x60, 0xc0, 0x60)  # #60c060
+
+        steps = max(path_len - 1, 1)
+
+        # Generate a gradient from dark to lighter green
+        path_colors = []
+        for i, (r, c) in enumerate(path):
+            t = i / steps  # fraction from start to end
+            R = int(start_rgb[0] + t * (end_rgb[0] - start_rgb[0]))
+            G = int(start_rgb[1] + t * (end_rgb[1] - start_rgb[1]))
+            B = int(start_rgb[2] + t * (end_rgb[2] - start_rgb[2]))
+            color_hex = f"#{R:02x}{G:02x}{B:02x}"
+            self.entries[r][c].config(bg=color_hex)
+            self.current_highlight.append(self.entries[r][c])
+            path_colors.append(color_hex)
+
+        # Draw arrow lines using the color of the destination square
+        for i in range(path_len - 1):
             (r1, c1) = path[i]
             (r2, c2) = path[i+1]
             x1, y1 = self.entry_centers.get((r1, c1), (0,0))
             x2, y2 = self.entry_centers.get((r2, c2), (0,0))
+            line_color = path_colors[i+1]
             line_id = self.canvas.create_line(
-                x1, y1, x2, y2, fill="#90EE90", width=2, arrow=tk.LAST
+                x1, y1, x2, y2,
+                fill=line_color, width=2, arrow=tk.LAST
             )
             self.path_lines.append(line_id)
-
 
     def solve(self):
         self.clear_highlights()
