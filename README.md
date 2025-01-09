@@ -12,7 +12,7 @@ Disclaimer: Uses existing word dictionary. Not the same dictionary that Word Hun
 ## Features
 
 - **Simple UI**: Enter 16 letters in a 4×4 grid, click "Find Words," and watch as all valid words appear in the results box.
-- **Click to Highlight**: Clicking any listed word will highlight the corresponding squares in the grid and draw connecting lines, making it easy to visualize the path.
+- **Click to Highlight**: Clicking any listed word will highlight the corresponding squares in the grid in an increasingly darkening green gradient and draw connecting lines, making it easy to visualize the path. 
 - **Scoring**: Displays grouped words by length and calculates a total score based on the built-in word length scoring table.
 - **Dictionary**: Uses a local `words_alpha.txt` for checking valid words; automatically downloads if missing.
 
